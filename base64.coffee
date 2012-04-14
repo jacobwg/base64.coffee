@@ -3,13 +3,11 @@
   fromCharCode = String.fromCharCode
   invalidCharacters = /[^\w\+\/\=]/g
   max = Math.max
-  INVALID_CHARACTER_ERR = (->
-    try
-      document.createElement '$'
-    catch error
-      error
-  )()
-
+  class InvalidCharacterError
+    constructor: (message) ->
+      @name = "InvalidCharacter"
+      @message = (message || "")
+    InvalidCharacterError.prototype = Error.prototype
 
   encode = @btoa || (input) ->
     output = ''
@@ -22,7 +20,7 @@
       chr3 = input.charCodeAt(i++) || 0
 
       if max(chr1, chr2, chr3) > 0xFF
-        throw INVALID_CHARACTER_ERR
+        throw new InvalidCharacterError
 
       enc1 = chr1 >> 2
       enc2 = ((chr1 & 3) << 4) | (chr2 >> 4)
@@ -45,7 +43,7 @@
     length = input.length
 
     if length % 4 != 0
-      throw INVALID_CHARACTER_ERR
+      throw new InvalidCharacterError
 
     while i < length
 

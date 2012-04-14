@@ -1,16 +1,22 @@
 (function() {
+
   this.Base64 = (function() {
-    var INVALID_CHARACTER_ERR, characters, decode, encode, fromCharCode, invalidCharacters, max;
+    var InvalidCharacterError, characters, decode, encode, fromCharCode, invalidCharacters, max;
     characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
     fromCharCode = String.fromCharCode;
     invalidCharacters = /[^\w\+\/\=]/g;
     max = Math.max;
-    INVALID_CHARACTER_ERR = (function() {
-      try {
-        return document.createElement('$');
-      } catch (error) {
-        return error;
+    InvalidCharacterError = (function() {
+
+      function InvalidCharacterError(message) {
+        this.name = "InvalidCharacter";
+        this.message = message || "";
       }
+
+      InvalidCharacterError.prototype = Error.prototype;
+
+      return InvalidCharacterError;
+
     })();
     encode = this.btoa || function(input) {
       var char, chr1, chr2, chr3, enc1, enc2, enc3, enc4, i, output, _i, _len, _ref;
@@ -20,9 +26,7 @@
         chr1 = input.charCodeAt(i++) || 0;
         chr2 = input.charCodeAt(i++) || 0;
         chr3 = input.charCodeAt(i++) || 0;
-        if (max(chr1, chr2, chr3) > 0xFF) {
-          throw INVALID_CHARACTER_ERR;
-        }
+        if (max(chr1, chr2, chr3) > 0xFF) throw new InvalidCharacterError;
         enc1 = chr1 >> 2;
         enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
         enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
@@ -45,9 +49,7 @@
       output = '';
       i = 0;
       length = input.length;
-      if (length % 4 !== 0) {
-        throw INVALID_CHARACTER_ERR;
-      }
+      if (length % 4 !== 0) throw new InvalidCharacterError;
       while (i < length) {
         enc1 = characters.indexOf(input.charAt(i++));
         enc2 = characters.indexOf(input.charAt(i++));
@@ -57,12 +59,8 @@
         chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
         chr3 = ((enc3 & 3) << 6) | enc4;
         output += fromCharCode(chr1);
-        if (enc3 !== 64) {
-          output += fromCharCode(chr2);
-        }
-        if (enc4 !== 64) {
-          output += fromCharCode(chr3);
-        }
+        if (enc3 !== 64) output += fromCharCode(chr2);
+        if (enc4 !== 64) output += fromCharCode(chr3);
       }
       return output;
     };
@@ -77,4 +75,5 @@
       }
     };
   })();
+
 }).call(this);
