@@ -65,13 +65,21 @@
       return output;
     };
     return {
-      decode: function(input) {
+      decode: function(input, unicode) {
         var result;
         result = decode(input.replace(invalidCharacters, ''));
-        return Unicode.pack(result);
+        if (unicode) {
+          return Unicode.pack(result);
+        } else {
+          return result;
+        }
       },
-      encode: function(input) {
-        return encode(Unicode.unpack(input));
+      encode: function(input, unicode) {
+        if (unicode) {
+          return encode(Unicode.unpack(input));
+        } else {
+          return encode(input);
+        }
       }
     };
   })();

@@ -64,10 +64,11 @@
         output += fromCharCode(chr3)
     output
 
-  decode: (input) ->
+  decode: (input, unicode) ->
     result = decode(input.replace(invalidCharacters, ''))
-    Unicode.pack(result)
+    if unicode then Unicode.pack(result) else result
 
-  encode: (input) -> encode(Unicode.unpack input)
+  encode: (input, unicode) ->
+    if unicode then encode(Unicode.unpack input) else encode(input)
 
 )()

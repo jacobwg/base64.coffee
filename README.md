@@ -10,7 +10,7 @@ Usage
 
 But wait, there is more
 -----------------------
-Also supports unicode strings. Oh wow!
+Also supports unicode strings with an optional second parameter. Oh wow!
 
-    Base64.encode('привет мир') # -> '0L/RgNC40LLQtdGCINC80LjRgOCAgA=='
-    Base64.decode('0L/RgNC40LLQtdGCINC80LjRgOCAgA==') # -> 'привет мир'
+    Base64.encode('привет мир', true) # -> '0L/RgNC40LLQtdGCINC80LjRgOCAgA=='
+    Base64.decode('0L/RgNC40LLQtdGCINC80LjRgOCAgA==', true) # -> 'привет мир'
